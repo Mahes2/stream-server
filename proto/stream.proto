@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package com.codespade.proto;
+option go_package = "github.com/codespade/stream-server/pb";
+
+service Stream {
+    rpc BlockId(BlockIdRequest) returns (BlockIdResponse){}
+    rpc VerifyHash(stream VerifyHashRequest) returns (stream VerifyHashResponse){}
+}
+
+message BlockIdRequest {
+    string id = 1;
+}
+
+message BlockIdResponse {
+    string id = 1;
+    string status = 2;
+}
+
+message VerifyHashRequest {
+    string id = 1;
+    string hash = 2;
+}
+
+message VerifyHashResponse {
+    string id = 1;
+    string status = 2;
+}
