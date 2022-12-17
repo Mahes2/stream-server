@@ -2,10 +2,10 @@ package server
 
 import (
 	"fmt"
-
-	"github.com/codespade/stream-server/api"
 	"github.com/codespade/stream-server/api/grpc"
 	"github.com/codespade/stream-server/api/http"
+	"github.com/codespade/stream-server/repository"
+	"github.com/codespade/stream-server/service"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" //Postgres driver
 )
@@ -16,10 +16,12 @@ func InitGRPC(port string) error {
 	if err != nil {
 		fmt.Println(err)
 	}
-	repository := api.NewRepository(db)
 
+	repo := repository.NewRepository(db)
+	svc := service.NewService(repo)
+	//repository.Db = db
 	grpcServer := grpc.Server{
-		Repository: repository,
+		Service: svc,
 	}
 
 	return runGRPCServer(grpcServer, port)
@@ -30,10 +32,13 @@ func InitHttp(port string) error {
 	if err != nil {
 		fmt.Println(err)
 	}
-	repository := api.NewRepository(db)
 
+	repo := repository.NewRepository(db)
+	svc := service.NewService(repo)
+
+	//repository.Db = db
 	httpServer := http.Server{
-		Repository: repository,
+		Service: svc,
 	}
 
 	return runHTTPServer(httpServer, port)

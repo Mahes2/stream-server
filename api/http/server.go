@@ -2,26 +2,24 @@ package http
 
 import (
 	"context"
+	"github.com/codespade/stream-server/service"
 	"net"
 	"net/http"
-
-	"github.com/codespade/stream-server/api"
-	controller "github.com/codespade/stream-server/api/http/controller"
 )
 
 // Server struct
 type Server struct {
-	server     *http.Server
-	Repository api.Repository
+	server *http.Server
+	service.Service
 }
 
 // Serve will create, bind, and run a GRPC server
 func (s *Server) Serve(port string) error {
-	controller.Init(s.Repository)
-
 	s.server = &http.Server{
 		Handler: handler(),
 	}
+
+	svc = s.Service
 
 	// Create port listener
 	lis, err := net.Listen("tcp", ":"+port)
@@ -32,7 +30,7 @@ func (s *Server) Serve(port string) error {
 	return s.server.Serve(lis)
 }
 
-//GracefulStop gracefully stop server
+// GracefulStop gracefully stop server
 func (s *Server) Shutdown(ctx context.Context) error {
 	return s.server.Shutdown(ctx)
 }

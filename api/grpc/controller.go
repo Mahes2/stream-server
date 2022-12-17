@@ -2,12 +2,10 @@ package grpc
 
 import (
 	"context"
-	"crypto/md5"
-	"encoding/hex"
 	"fmt"
 	"io"
 
-	pb "github.com/codespade/stream-server/pb"
+	"github.com/codespade/stream-server/pb"
 )
 
 func (s *Server) VerifyHash(stream pb.Stream_VerifyHashServer) error {
@@ -21,11 +19,9 @@ func (s *Server) VerifyHash(stream pb.Stream_VerifyHashServer) error {
 			return err
 		}
 
-		hasher := md5.New()
-		hasher.Write([]byte(request.Id))
-		data := hex.EncodeToString(hasher.Sum(nil))
+		md5Hash := s.Service.HashToMD5(request.Id)
 
-		if request.Hash == string(data) {
+		if request.Hash == md5Hash {
 			fmt.Println("Hash for ID ", request.Id, "is VALID")
 			response := &pb.VerifyHashResponse{
 				Id:     request.Id,
@@ -50,7 +46,7 @@ func (s *Server) VerifyHash(stream pb.Stream_VerifyHashServer) error {
 }
 
 func (s *Server) BlockId(ctx context.Context, request *pb.BlockIdRequest) (response *pb.BlockIdResponse, err error) {
-	resp, err := s.Repository.BlockID(ctx, request.Id)
+	resp, err := s.Service.BlockID(ctx, request.Id)
 	if err != nil {
 		fmt.Println(err)
 	}

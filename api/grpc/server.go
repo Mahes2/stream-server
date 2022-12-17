@@ -1,11 +1,10 @@
 package grpc
 
 import (
+	"github.com/codespade/stream-server/service"
 	"net"
 
-	"github.com/codespade/stream-server/api"
 	pb "github.com/codespade/stream-server/pb"
-
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
@@ -13,8 +12,8 @@ import (
 // Server struct
 type Server struct {
 	pb.UnimplementedStreamServer
-	server     *grpc.Server
-	Repository api.Repository
+	server *grpc.Server
+	service.Service
 }
 
 // Serve will create, bind, and run a GRPC server
@@ -34,7 +33,7 @@ func (s *Server) Serve(port string) error {
 	return s.server.Serve(lis)
 }
 
-//GracefulStop gracefully stop server
+// GracefulStop gracefully stop server
 func (s *Server) GracefulStop() {
 	s.server.GracefulStop()
 }

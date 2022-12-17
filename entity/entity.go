@@ -1,4 +1,4 @@
-package api
+package entity
 
 type Request struct {
 	Id   string `json:"id"`
