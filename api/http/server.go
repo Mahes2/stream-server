@@ -2,15 +2,16 @@ package http
 
 import (
 	"context"
-	"github.com/codespade/stream-server/service"
 	"net"
 	"net/http"
+
+	hasherService "github.com/codespade/stream-server/service/hasher"
 )
 
 // Server struct
 type Server struct {
-	server *http.Server
-	service.Service
+	server        *http.Server
+	HasherService hasherService.Service
 }
 
 // Serve will create, bind, and run a GRPC server
@@ -19,7 +20,7 @@ func (s *Server) Serve(port string) error {
 		Handler: handler(),
 	}
 
-	svc = s.Service
+	svc = s.HasherService
 
 	// Create port listener
 	lis, err := net.Listen("tcp", ":"+port)

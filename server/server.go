@@ -2,10 +2,13 @@ package server
 
 import (
 	"fmt"
+
 	"github.com/codespade/stream-server/api/grpc"
 	"github.com/codespade/stream-server/api/http"
-	"github.com/codespade/stream-server/repository"
-	"github.com/codespade/stream-server/service"
+	orderRepo "github.com/codespade/stream-server/repository/order"
+	testRepo "github.com/codespade/stream-server/repository/test"
+	hasherService "github.com/codespade/stream-server/service/hasher"
+	orderService "github.com/codespade/stream-server/service/order"
 	"github.com/jmoiron/sqlx"
 	_ "github.com/lib/pq" //Postgres driver
 )
@@ -17,11 +20,15 @@ func InitGRPC(port string) error {
 		fmt.Println(err)
 	}
 
-	repo := repository.NewRepository(db)
-	svc := service.NewService(repo)
-	//repository.Db = db
+	testRepo := testRepo.NewRepository(db)
+	hasherSvc := hasherService.NewService(testRepo)
+
+	orderRepo := orderRepo.NewRepository(db)
+	orderSvc := orderService.NewService(orderRepo)
+
 	grpcServer := grpc.Server{
-		Service: svc,
+		HasherService: hasherSvc,
+		OrderService:  orderSvc,
 	}
 
 	return runGRPCServer(grpcServer, port)
@@ -33,12 +40,12 @@ func InitHttp(port string) error {
 		fmt.Println(err)
 	}
 
-	repo := repository.NewRepository(db)
-	svc := service.NewService(repo)
+	repo := testRepo.NewRepository(db)
+	svc := hasherService.NewService(repo)
 
 	//repository.Db = db
 	httpServer := http.Server{
-		Service: svc,
+		HasherService: svc,
 	}
 
 	return runHTTPServer(httpServer, port)

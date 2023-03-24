@@ -1,0 +1,21 @@
+syntax = "proto3";
+
+package com.codespade.proto;
+option go_package = "github.com/codespade/stream-server/pb";
+
+service Order {
+    rpc ListOrder(stream ListOrderRequest) returns (stream ListOrderResponse){}
+}
+
+message ListOrderRequest {
+    int64 driver_id = 1;
+}
+
+message ListOrderResponse {
+    message Order {
+        int64 id = 1;
+        int32 quantity = 2;
+        string customer_address = 3;
+    }
+    repeated Order order = 1;
+}

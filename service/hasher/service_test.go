@@ -2,14 +2,15 @@ package service
 
 import (
 	"context"
+	"testing"
+
 	"github.com/codespade/stream-server/entity"
-	"github.com/codespade/stream-server/repository"
+	testRepo "github.com/codespade/stream-server/repository/test"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
-	"testing"
 )
 
-var repo = repository.Mock{Mock: mock.Mock{}}
+var repo = testRepo.Mock{Mock: mock.Mock{}}
 var svc = NewService(&repo)
 
 func TestService_BlockID(t *testing.T) {

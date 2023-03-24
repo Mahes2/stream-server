@@ -1,8 +1,10 @@
 package grpc
 
 import (
-	"github.com/codespade/stream-server/service"
 	"net"
+
+	hasherService "github.com/codespade/stream-server/service/hasher"
+	orderService "github.com/codespade/stream-server/service/order"
 
 	pb "github.com/codespade/stream-server/pb"
 	"google.golang.org/grpc"
@@ -12,8 +14,11 @@ import (
 // Server struct
 type Server struct {
 	pb.UnimplementedStreamServer
+	pb.UnimplementedOrderServer
 	server *grpc.Server
-	service.Service
+
+	HasherService hasherService.Service
+	OrderService  orderService.Service
 }
 
 // Serve will create, bind, and run a GRPC server
@@ -21,6 +26,7 @@ func (s *Server) Serve(port string) error {
 	s.server = grpc.NewServer()
 
 	pb.RegisterStreamServer(s.server, s)
+	pb.RegisterOrderServer(s.server, s)
 
 	reflection.Register(s.server)
 

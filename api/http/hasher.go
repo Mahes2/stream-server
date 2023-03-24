@@ -3,15 +3,16 @@ package http
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/codespade/stream-server/entity"
-	"github.com/codespade/stream-server/service"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/codespade/stream-server/entity"
+	hasherService "github.com/codespade/stream-server/service/hasher"
 
 	"github.com/go-chi/render"
 )
 
-var svc service.Service
+var svc hasherService.Service
 
 func VerifyHash(w http.ResponseWriter, r *http.Request) {
 	resp := entity.Response{}

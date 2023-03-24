@@ -19,7 +19,7 @@ func (s *Server) VerifyHash(stream pb.Stream_VerifyHashServer) error {
 			return err
 		}
 
-		md5Hash := s.Service.HashToMD5(request.Id)
+		md5Hash := s.HasherService.HashToMD5(request.Id)
 
 		if request.Hash == md5Hash {
 			fmt.Println("Hash for ID ", request.Id, "is VALID")
@@ -46,7 +46,7 @@ func (s *Server) VerifyHash(stream pb.Stream_VerifyHashServer) error {
 }
 
 func (s *Server) BlockId(ctx context.Context, request *pb.BlockIdRequest) (response *pb.BlockIdResponse, err error) {
-	resp, err := s.Service.BlockID(ctx, request.Id)
+	resp, err := s.HasherService.BlockID(ctx, request.Id)
 	if err != nil {
 		fmt.Println(err)
 	}

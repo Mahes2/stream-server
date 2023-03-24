@@ -4,8 +4,9 @@ import (
 	"context"
 	"crypto/md5"
 	"encoding/hex"
+
 	"github.com/codespade/stream-server/entity"
-	"github.com/codespade/stream-server/repository"
+	testRepo "github.com/codespade/stream-server/repository/test"
 )
 
 type Service interface {
@@ -14,10 +15,10 @@ type Service interface {
 }
 
 type service struct {
-	repo repository.Repository
+	repo testRepo.Repository
 }
 
-func NewService(r repository.Repository) *service {
+func NewService(r testRepo.Repository) *service {
 	return &service{
 		repo: r,
 	}
